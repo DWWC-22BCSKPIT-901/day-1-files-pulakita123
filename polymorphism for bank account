@@ -1,0 +1,70 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Base class: Account
+class Account {
+protected:
+    double balance;
+
+public:
+    Account(double bal) : balance(bal) {}
+    virtual void calculateInterest() = 0; // Pure virtual function
+    virtual void display() {
+        cout << "Balance: " << balance << endl;
+    }
+    virtual ~Account() {}
+};
+
+// Derived class: SavingsAccount
+class SavingsAccount : public Account {
+    double rate;
+    int time;
+
+public:
+    SavingsAccount(double bal, double r, int t) : Account(bal), rate(r), time(t) {}
+
+    void calculateInterest() override {
+        double interest = balance * rate * time;
+        cout << "Savings Account Interest: " << interest << endl;
+        balance += interest;
+    }
+
+    void display() override {
+        cout << "Savings Account Balance: " << balance << endl;
+    }
+};
+
+// Derived class: CurrentAccount
+class CurrentAccount : public Account {
+    double maintenanceFee;
+
+public:
+    CurrentAccount(double bal, double fee) : Account(bal), maintenanceFee(fee) {}
+
+    void calculateInterest() override {
+        cout << "No interest for Current Account. Deducting maintenance fee: " << maintenanceFee << endl;
+        balance -= maintenanceFee;
+    }
+
+    void display() override {
+        cout << "Current Account Balance: " << balance << endl;
+    }
+};
+
+int main() {
+    Account* accounts[2];
+
+    // Create SavingsAccount and CurrentAccount
+    accounts[0] = new SavingsAccount(1000.0, 0.05, 2);
+    accounts[1] = new CurrentAccount(2000.0, 50.0);
+
+    // Calculate interest and display details
+    for (int i = 0; i < 2; i++) {
+        accounts[i]->calculateInterest();
+        accounts[i]->display();
+        delete accounts[i];
+    }
+
+    return 0;
+}
