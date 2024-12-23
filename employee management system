@@ -1,0 +1,74 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Base class: Employee
+class Employee {
+protected:
+    string name;
+    int id;
+    double salary;
+
+public:
+    Employee(string n, int i, double s) : name(n), id(i), salary(s) {}
+
+    virtual double calculateEarnings() = 0; // Pure virtual function
+
+    virtual void display() {
+        cout << "Name: " << name << ", ID: " << id << ", Base Salary: " << salary << endl;
+    }
+
+    virtual ~Employee() {}
+};
+
+// Derived class: Manager
+class Manager : public Employee {
+    double bonus;
+
+public:
+    Manager(string n, int i, double s, double b) : Employee(n, i, s), bonus(b) {}
+
+    double calculateEarnings() override {
+        return salary + bonus;
+    }
+
+    void display() override {
+        Employee::display();
+        cout << "Bonus: " << bonus << ", Total Earnings: " << calculateEarnings() << endl;
+    }
+};
+
+// Derived class: Developer
+class Developer : public Employee {
+    double overtimeHours;
+    double overtimeRate;
+
+public:
+    Developer(string n, int i, double s, double hours, double rate) : Employee(n, i, s), overtimeHours(hours), overtimeRate(rate) {}
+
+    double calculateEarnings() override {
+        return salary + (overtimeHours * overtimeRate);
+    }
+
+    void display() override {
+        Employee::display();
+        cout << "Overtime Hours: " << overtimeHours << ", Overtime Rate: " << overtimeRate
+             << ", Total Earnings: " << calculateEarnings() << endl;
+    }
+};
+
+int main() {
+    Employee* employees[2];
+
+    // Create Manager and Developer objects
+    employees[0] = new Manager("Alice", 101, 50000, 10000);
+    employees[1] = new Developer("Bob", 102, 40000, 20, 50);
+
+    // Display employee details and calculate earnings
+    for (int i = 0; i < 2; i++) {
+        employees[i]->display();
+        delete employees[i];
+    }
+
+    return 0;
+}
